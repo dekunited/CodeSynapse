@@ -5,7 +5,6 @@ by Manan Patel, Zachary Perry, Shayana Shreshta, Eric Vaughan
 
 This project looks to explore the capabilities of LLMs in cross-language code translation and its accuracy when translating across languages with different paradigms. In addition, we aim to build a tool that will allow developers to simply input code and translate it to a desired language using the LLM that is best at that specific translation.
 
----
 
 ## 🚀 Getting Started
 
