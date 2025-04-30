@@ -9,11 +9,11 @@ import (
 	"os/signal"
 	"time"
 
-	"github.com/rs/cors"
+	"CodeSynapse/internal/middleware"
 )
 
 /*
-  Run() will start up the http server and listen for any errors
+Run() will start up the http server and listen for any errors
 */
 func Run(ctx context.Context, w io.Writer) error {
 	ctx, cancel := signal.NotifyContext(ctx, os.Interrupt)
@@ -58,21 +58,16 @@ func Run(ctx context.Context, w io.Writer) error {
 }
 
 /*
-  NewServer() sets up the routes, middleware, etc.
+NewServer() sets up the routes, middleware, etc.
 */
-func NewServer(
-// add dependencies here
-) http.Handler {
+func NewServer() http.Handler {
 	mux := http.NewServeMux()
-
-	// add routes here
 	AddRoutes(mux)
 
 	var handler http.Handler = mux
 
-	// Setup CORS middleware (for local development)
-	// Will need to be configured properly in production
-	handler = cors.Default().Handler(handler)
+	handler = middleware.LoggerMiddleware(handler)
+	handler = middleware.CorsMiddleware(handler)
 
 	return handler
 }

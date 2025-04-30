@@ -6,8 +6,25 @@ import (
 )
 
 /*
-  Define any http route handlers here
+  Define the actual routes here
 */
+
+func AddRoutes(mux *http.ServeMux) {
+	mux.Handle("/hello", HandleHelloHandler("hello"))
+	mux.Handle("/health", HandleHealthHandler())
+	mux.Handle("/api/translate", TranslateHandler())
+}
+
+/*
+  Define any route handlers here
+*/
+
+func TranslateHandler() http.Handler {
+	return http.HandlerFunc(
+		func(w http.ResponseWriter, r *http.Request) {
+		},
+	)
+}
 
 func HandleHelloHandler(hello string) http.Handler {
 	hello2 := hello + "2"
