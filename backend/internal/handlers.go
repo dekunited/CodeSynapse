@@ -7,8 +7,9 @@ import (
 )
 
 type TranslationRequest struct {
-	Translation string `json:"translation"`
-	Code        string `json:"code"`
+	Translation string  `json:"translation"`
+	Code        string  `json:"code"`
+	Prompt      *string `json:"prompt,omitempty"`
 }
 
 type TranslationResponse struct {
@@ -49,7 +50,7 @@ func TranslateHandler() http.Handler {
 			log.Printf("Translation request received: %s\n", req.Translation)
 
 			// Translate the Code
-			_, err = TranslateCode(r.Context(), req.Translation, req.Code)
+			_, err = TranslateCode(r.Context(), req)
 			if err != nil {
 				http.Error(w, err.Error(), http.StatusInternalServerError)
 				log.Printf("ERROR DURING TRANSLATION")

@@ -5,10 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
-	"os"
 	"strings"
-
-	"github.com/hupe1980/go-huggingface"
 )
 
 /*
@@ -19,24 +16,23 @@ var bestTranslationMap = map[string]string{
 	"go-python":   "CodeBERT",
 }
 
-func TranslateCode(
-	ctx context.Context,
-	translation string,
-	code string,
-) (*TranslationResponse, error) {
-	model, ok := bestTranslationMap[translation]
+/*
+ * TranslateCode() 
+ */
+func TranslateCode(ctx context.Context, req TranslationRequest) (*TranslationResponse, error) {
+	model, ok := bestTranslationMap[req.Translation]
 	if !ok {
 		// TODO: Error here, not supported, etc.
 	}
 
 	switch model {
 	case "CodeBERT":
-		log.Printf("    Translation supported -- using %s for %s\n", model, translation)
-		TranslateWithCodeBERT(ctx, translation, code)
+		log.Printf("    Translation supported -- using %s for %s\n", model, req.Translation)
+		//TranslateWithCodeBERT(ctx, req)
 	case "Codex":
-		log.Printf("    Translation supported -- using %s for %s\n", model, translation)
+		log.Printf("    Translation supported -- using %s for %s\n", model, req.Translation)
 	case "Transcoder":
-		log.Printf("    Translation supported -- using %s for %s\n", model, translation)
+		log.Printf("    Translation supported -- using %s for %s\n", model, req.Translation)
 	default:
 		log.Printf("    Translation not supported")
 	}
@@ -44,44 +40,9 @@ func TranslateCode(
 	return nil, nil
 }
 
-func TranslateWithCodeBERT(ctx context.Context, translation string, code string) {
-	token := os.Getenv("HUGGING_FACE_TOKEN")
-	if token == "" {
-		// todo - error here
-	}
-
-	client := huggingface.NewInferenceClient(token)
-	log.Println("Translating... ", client)
-
-	prompt, err := BuildPrompt(ctx, translation, code)
-	if err != nil {
-		// todo - erro here
-	}
-	log.Println("     Prompt... ", prompt)
-
-	maxNewTokens := 1024
-	temp := 0.2
-	topP := 0.95
-	returnFullText := false
-
-	result, err := client.TextGeneration(ctx, &huggingface.TextGenerationRequest{
-		Model:  "microsoft/codebert-base", 
-		Inputs: prompt,
-		Parameters: huggingface.TextGenerationParameters{
-			MaxNewTokens:   &maxNewTokens,   // Adjust based on expected response size
-			Temperature:    &temp,           // Lower for more deterministic results
-			TopP:           &topP,           // Nucleus sampling
-			ReturnFullText: &returnFullText, // Only return the generated text, not the prompt
-		},
-	})
-
-  if err != nil {
-    log.Println("BERT -- ", err)
-  }
-
-  log.Println("IDKIDKIDIKD: ", result)
-}
-
+/*
+ * Build the prompt to send to the LLM
+ */
 func BuildPrompt(ctx context.Context, translation string, code string) (string, error) {
 	translationPair := strings.Split(translation, "-")
 	if len(translationPair) != 2 {
