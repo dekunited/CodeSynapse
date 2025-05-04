@@ -23,7 +23,6 @@ type TranslationResponse struct {
 
 func AddRoutes(mux *http.ServeMux) {
 	mux.Handle("/hello", HandleHelloHandler("hello"))
-	mux.Handle("/health", HandleHealthHandler())
 	mux.Handle("/api/translate", TranslateHandler())
 }
 
@@ -53,7 +52,7 @@ func TranslateHandler() http.Handler {
 			_, err = TranslateCode(r.Context(), req)
 			if err != nil {
 				http.Error(w, err.Error(), http.StatusInternalServerError)
-				log.Printf("ERROR DURING TRANSLATION")
+        log.Println("TranslateHandler(): Error during translation: ", err)
 				return
 			}
 
@@ -73,12 +72,3 @@ func HandleHelloHandler(hello string) http.Handler {
 	)
 }
 
-func HandleHealthHandler() http.Handler {
-	return http.HandlerFunc(
-		func(w http.ResponseWriter, r *http.Request) {
-			w.Header().Set("Content-Type", "application/json")
-			w.Write([]byte(`{"status": "ok"}`))
-			log.Printf("HandleHealthHandler(): Request recieved")
-		},
-	)
-}
