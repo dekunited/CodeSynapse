@@ -169,6 +169,7 @@ def perform_translations(code_df, start_lang, target_lang):
                 metrics = calculate_codebleu(target_lang_code_truth, target_lang_code_pred, target_lang)
                 translation_info.update(metrics)
                 translation_info_list.append(translation_info)
+                print("Done")
                 break
             
     # Remove old file if necessary
@@ -183,6 +184,7 @@ def perform_translations(code_df, start_lang, target_lang):
         writer.writerows(translation_info_list)
     return
 
+
 def main():
     # Define the languages that will be tested
     lang_combos = [
@@ -194,7 +196,7 @@ def main():
         ("Java", "C++")]
     
     # Read in the csv with equivalent code in all languages
-    code_df = pd.read_csv("all_languages_aligned.csv")
+    code_df = pd.read_csv("./data-processing/all_languages_aligned.csv")
 
     # Obtain 100 translations for each language combo
     for lang_combo in lang_combos:
