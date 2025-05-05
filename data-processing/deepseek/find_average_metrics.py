@@ -7,12 +7,12 @@ import os
 def main():
     # List of csv files to examine
     files = [
-        "cpp_to_java.csv",
-        "cpp_to_python.csv",
-        "java_to_cpp.csv",
-        "java_to_python.csv",
-        "python_to_cpp.csv",
-        "python_to_java.csv"
+        "./data-processing/deepseek/cpp_to_java.csv",
+        "./data-processing/deepseek/cpp_to_python.csv",
+        "./data-processing/deepseek/java_to_cpp.csv",
+        "./data-processing/deepseek/java_to_python.csv",
+        "./data-processing/deepseek/python_to_cpp.csv",
+        "./data-processing/deepseek/python_to_java.csv"
     ]
 
     # List of metrics in each file that we want to find average of
@@ -40,7 +40,7 @@ def main():
     for file in files:
         df = pd.read_csv(file)
         avg_metrics = {}
-        avg_metrics["translation"] = file.split(".")[0]
+        avg_metrics["translation"] = file.split("/")[-1].split(".")[0]
         for i in range(len(metrics)):
             data = df[metrics[i]]
             avg = np.mean(data)
