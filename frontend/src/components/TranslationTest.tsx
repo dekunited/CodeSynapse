@@ -1,17 +1,11 @@
 import { useState } from 'react'
 import axios from 'axios'
-import { Button, TextField, MenuItem, Select, FormControl, InputLabel, Box, Typography, CircularProgress, Paper } from '@mui/material'
+import '../../styles/translation_ui.css'
 
 interface TranslationRequest {
   translation: string;
   code: string;
 }
-
-/*
-interface TranslationResponse {
-  translatedCode: string;
-  modelUsed: string;
-}*/
 
 export default function TranslationTest() {
   const [sourceLanguage, setSourceLanguage] = useState<string>('python')
@@ -22,18 +16,60 @@ export default function TranslationTest() {
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<string | null>(null)
 
-  const handleSubmit = async (): Promise<void> => {
+  function decodePseudoCode(input: string): string {
+      // const lines: string[] = []
+      // const tokens = input.replace(/â–|␣/g, ' ').split('NEW_LINE')
+      const cleanedInput = input.replace(/â–|␣/g, ' ')           // Replace weird space chars
+        .replace(/\bINDENT\b/g, '  ')       // Remove INDENT
+        .replace(/\bDEDENT\b/g, ' ')       // Remove DEDENT
+      let indentLevel = 0
+      const indent = () => '  '.repeat(indentLevel)
+
+      const tokens = cleanedInput.split('NEW_LINE')
+        const lines: string[] = []
+
+        for (let token of tokens) {
+          token = token.trim()
+          if (!token) continue
+
+          const segments = token.split(';').map(s => s.trim()).filter(Boolean)
+          for (let segment of segments) {
+            lines.push(segment)
+          }
+        }
+            
+      for (let token of tokens) {
+        token = token.trim()
+    
+        if (token === 'INDENT') {
+          indentLevel++
+        } else if (token === 'DEDENT') {
+          input.replace('DEDENT', ' ')
+          indentLevel = Math.max(0, indentLevel - 1)
+        } else if (token) {
+          // Split at semicolons to create multiple lines from one token
+          const segments = token.split(';').map(s => s.trim()).filter(Boolean)
+          for (let segment of segments) {
+            lines.push(indent() + segment)
+          }
+        }
+      }
+    
+      return lines.join('\n')
+    }
+  
+    const handleSubmit = async (): Promise<void> => {
     setLoading(true)
     setError(null)
-    
+
     try {
       const request: TranslationRequest = {
         translation: `${sourceLanguage}-${targetLanguage}`,
         code: sourceCode
       }
-      
+
       const response = await axios.post('http://localhost:8080/api/translate', request)
-      
+
       setTranslatedCode(response.data.translatedCode)
       setModelUsed(response.data.modelUsed)
     } catch (err) {
@@ -47,92 +83,81 @@ export default function TranslationTest() {
   const languages = [
     { value: 'python', label: 'Python' },
     { value: 'java', label: 'Java' },
-    { value: 'javascript', label: 'JavaScript' },
-    { value: 'go', label: 'Go' },
+    // { value: 'javascript', label: 'JavaScript' },
+    // { value: 'go', label: 'Go' },
     { value: 'cpp', label: 'C++' },
-    { value: 'csharp', label: 'C#' },
-    { value: 'typescript', label: 'TypeScript' },
-    { value: 'rust', label: 'Rust' }
+    // { value: 'csharp', label: 'C#' },
+    // { value: 'typescript', label: 'TypeScript' },
+    // { value: 'rust', label: 'Rust' }
   ]
 
   return (
-    <Paper elevation={3} sx={{ p: 3, m: 2 }}>
-      <Typography variant="h5" component="h2" gutterBottom>
-        Code Translation
-      </Typography>
-      
-      <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
-        <FormControl sx={{ minWidth: 120 }}>
-          <InputLabel id="source-language-label">From</InputLabel>
-          <Select
-            labelId="source-language-label"
+    <div className="container">
+      <h1>CodeSynapse</h1>
+      <h5>Bridge the Syntax, Power the Future!</h5>
+
+      <div className="select-group">
+        <div className="select-block">
+          <label htmlFor="source-lang">From</label>
+          <select
+            id="source-lang"
             value={sourceLanguage}
-            label="From"
             onChange={(e) => setSourceLanguage(e.target.value)}
           >
-            {languages.map((lang) => (
-              <MenuItem key={lang.value} value={lang.value}>{lang.label}</MenuItem>
+            {languages.map(lang => (
+              <option key={lang.value} value={lang.value}>{lang.label}</option>
             ))}
-          </Select>
-        </FormControl>
-        
-        <FormControl sx={{ minWidth: 120 }}>
-          <InputLabel id="target-language-label">To</InputLabel>
-          <Select
-            labelId="target-language-label"
+          </select>
+        </div>
+
+        <div className="select-block">
+          <label htmlFor="target-lang">To</label>
+          <select
+            id="target-lang"
             value={targetLanguage}
-            label="To"
             onChange={(e) => setTargetLanguage(e.target.value)}
           >
-            {languages.map((lang) => (
-              <MenuItem key={lang.value} value={lang.value}>{lang.label}</MenuItem>
+            {languages.map(lang => (
+              <option key={lang.value} value={lang.value}>{lang.label}</option>
             ))}
-          </Select>
-        </FormControl>
-      </Box>
-      
-      <TextField
-        label="Source Code"
-        multiline
-        rows={8}
-        fullWidth
+          </select>
+        </div>
+      </div>
+
+      <textarea
+        className="code-input"
+        placeholder="Enter source code here..."
+        rows={10}
         value={sourceCode}
-        onChange={(e) => setSourceCode(e.target.value)}
-        variant="outlined"
-        sx={{ mb: 2 }}
-      />
-      
-      <Button 
-        variant="contained" 
+        onChange={(e) => {
+          const raw = e.target.value
+          const formatted = decodePseudoCode(raw)
+          setSourceCode(formatted)
+        }}
+      ></textarea>
+
+
+      <button
+        className="translation-button"
         onClick={handleSubmit}
         disabled={loading || !sourceCode.trim()}
-        sx={{ mb: 2 }}
       >
-        {loading ? <CircularProgress size={24} /> : 'Translate Code'}
-      </Button>
-      
-      {error && (
-        <Typography color="error" sx={{ mb: 2 }}>
-          {error}
-        </Typography>
-      )}
-      
+        {loading ? 'Translating...' : 'Translate Code'}
+      </button>
+
+      {error && <p className="error-message">{error}</p>}
+
       {translatedCode && (
-        <Box>
-          <Typography variant="subtitle2" sx={{ mb: 1 }}>
-            Translated with {modelUsed}
-          </Typography>
-          <TextField
-            label="Translated Code"
-            multiline
-            rows={8}
-            fullWidth
+        <div className="result-block">
+          <p className="model-used">Translated with {modelUsed}</p>
+          <textarea
+            className="code-output"
+            rows={10}
             value={translatedCode}
-            InputProps={{ readOnly: true }}
-            variant="outlined"
-          />
-        </Box>
+            readOnly
+          ></textarea>
+        </div>
       )}
-    </Paper>
+    </div>
   )
 }
