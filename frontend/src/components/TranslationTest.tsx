@@ -126,6 +126,24 @@ export default function TranslationTest() {
     )
   }
 
+  const llmModelOption = () => {
+    const models = [
+      { value: 'llama-3.2-3b', label: 'Llama-3.2/3B' },
+      { value: 'deepseek-6.7b', label: 'Deepseek-coder/6.7B' },
+      { value: 'phi-2.7b', label: 'Phi/2.7B' }
+    ];
+  
+    return (
+      <>
+        {models.map(model => (
+          <option key={model.value} value={model.value}>
+            {model.label}
+          </option>
+        ))}
+      </>
+    );
+  }
+
   return (
     <div className="container">
       <h1>CodeSynapse</h1>
@@ -140,6 +158,17 @@ export default function TranslationTest() {
             onChange={(e) => setSourceLanguage(e.target.value)}
           >
             {renderLanguageOptions()}
+          </select>
+        </div>
+
+        <div className="select-block align-center">
+          <label htmlFor="llm-model">LLM Model</label>
+          <select
+            id="llm-model"
+            value={modelUsed}
+            onChange={(e) => setModelUsed(e.target.value)}
+          >
+            {llmModelOption()}
           </select>
         </div>
 
