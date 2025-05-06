@@ -1,0 +1,86 @@
+{
+  "java_to_python": [
+    {
+      "example_id": 0,
+      "source_code": "import java . io . * ; class GFG { static int calcAngle ( double h , double m ) { if ( h < 0 m < 0 h > 12 m > 60 ) System . out . println ( \" Wrong \u2581 input \" ) ; if ( h == 12 ) h = 0 ; if ( m == 60 ) { m = 0 ; h += 1 ; if ( h > 12 ) h = h - 12 ; } int hour_angle = ( int ) ( 0.5 * ( h * 60 + m ) ) ; int minute_angle = ( int ) ( 6 * m ) ; int angle = Math . abs ( hour_angle - minute_angle ) ; angle = Math . min ( 360 - angle , angle ) ; return angle ; } public static void main ( String [ ] args ) { System . out . println ( calcAngle ( 9 , 60 ) + \" \u2581 degree \" ) ; System . out . println ( calcAngle ( 3 , 30 ) + \" \u2581 degree \" ) ; } }\n",
+      "reference_code": "def calcAngle ( h , m ) : NEW_LINE INDENT if ( h < 0 or m < 0 or h > 12 or m > 60 ) : NEW_LINE INDENT print ( ' Wrong \u2581 input ' ) NEW_LINE DEDENT if ( h == 12 ) : NEW_LINE INDENT h = 0 NEW_LINE DEDENT if ( m == 60 ) : NEW_LINE INDENT m = 0 NEW_LINE h += 1 ; NEW_LINE if ( h > 12 ) : NEW_LINE INDENT h = h - 12 ; NEW_LINE DEDENT DEDENT hour_angle = 0.5 * ( h * 60 + m ) NEW_LINE minute_angle = 6 * m NEW_LINE angle = abs ( hour_angle - minute_angle ) NEW_LINE angle = min ( 360 - angle , angle ) NEW_LINE return angle NEW_LINE DEDENT h = 9 NEW_LINE m = 60 NEW_LINE print ( ' Angle \u2581 ' , calcAngle ( h , m ) ) NEW_LINE\n",
+      "translated_code": "import math\n\ndef calc_angle(h, m):\n    if h < 0 or m < 0 or h > 12 or m > 60:\n        print(\"Wrong input\")\n        return None\n    if h == 12:\n        h = 0\n    if m == 60:\n        m = 0\n        h += 1\n        if h > 12:\n            h = h - 12\n    hour_angle = math.floor(0.5 * (h * 60 + m))\n    minute_angle = math.floor(6 * m)\n    angle = abs(hour_angle - minute_angle)\n    angle = min(360 - angle, angle)\n    return angle\n\nprint(calc_angle(9, 60) + \" degree\")\nprint(calc_angle(3, 30) + \" degree\")",
+      "bleu_1": 0.7020495750387319,
+      "bleu_2": 0.5556095368589608,
+      "bleu_4": 0.3851194355614175,
+      "keyword_match": 0.8,
+      "codebleu": 0.5095836048929923,
+      "inference_time": 10.896583080291748
+    }
+  ],
+  "java_to_cpp": [
+    {
+      "example_id": 0,
+      "source_code": "import java . io . * ; class GFG { static int calcAngle ( double h , double m ) { if ( h < 0 m < 0 h > 12 m > 60 ) System . out . println ( \" Wrong \u2581 input \" ) ; if ( h == 12 ) h = 0 ; if ( m == 60 ) { m = 0 ; h += 1 ; if ( h > 12 ) h = h - 12 ; } int hour_angle = ( int ) ( 0.5 * ( h * 60 + m ) ) ; int minute_angle = ( int ) ( 6 * m ) ; int angle = Math . abs ( hour_angle - minute_angle ) ; angle = Math . min ( 360 - angle , angle ) ; return angle ; } public static void main ( String [ ] args ) { System . out . println ( calcAngle ( 9 , 60 ) + \" \u2581 degree \" ) ; System . out . println ( calcAngle ( 3 , 30 ) + \" \u2581 degree \" ) ; } }\n",
+      "reference_code": "#include <bits/stdc++.h> NEW_LINE using namespace std ; int min ( int x , int y ) { return ( x < y ) ? x : y ; } int calcAngle ( double h , double m ) { if ( h < 0 m < 0 h > 12 m > 60 ) printf ( \" Wrong \u2581 input \" ) ; if ( h == 12 ) h = 0 ; if ( m == 60 ) { m = 0 ; h += 1 ; if ( h > 12 ) h = h - 12 ; } float hour_angle = 0.5 * ( h * 60 + m ) ; float minute_angle = 6 * m ; float angle = abs ( hour_angle - minute_angle ) ; angle = min ( 360 - angle , angle ) ; return angle ; } int main ( ) { cout << calcAngle ( 9 , 60 ) << endl ; cout << calcAngle ( 3 , 30 ) << endl ; return 0 ; }\n",
+      "translated_code": "#include <iostream>\n#include <cmath>\n\nusing namespace std;\n\nint calcAngle(double h, double m) {\n    if (h < 0 || m < 0 || h > 12 || m > 60) {\n        cout << \"Wrong input\" << endl;\n        return -1; // Return -1 to indicate invalid input\n    }\n\n    if (h == 12) h = 0;\n    if (m == 60) {\n        m = 0;\n        h += 1;\n        if (h > 12) h = h - 12;\n    }\n\n    int hour_angle = (int)(0.5 * (h * 60 + m));\n    int minute_angle = (int)(6 * m);\n    int angle = abs(hour_angle - minute_angle);\n    angle = min(360 - angle, angle);\n\n    return angle;\n}\n\nint main() {\n    cout << calcAngle(9, 60) << \" degree\" << endl;\n    cout << calcAngle(3, 30) << \" degree\" << endl;\n    return 0;\n}",
+      "bleu_1": 0.8226600985221675,
+      "bleu_2": 0.7550897061424519,
+      "bleu_4": 0.663202804681651,
+      "keyword_match": 0.888888888888889,
+      "codebleu": 0.7309086299438223,
+      "inference_time": 12.352417469024658
+    }
+  ],
+  "python_to_java": [
+    {
+      "example_id": 0,
+      "source_code": "def calcAngle ( h , m ) : NEW_LINE INDENT if ( h < 0 or m < 0 or h > 12 or m > 60 ) : NEW_LINE INDENT print ( ' Wrong \u2581 input ' ) NEW_LINE DEDENT if ( h == 12 ) : NEW_LINE INDENT h = 0 NEW_LINE DEDENT if ( m == 60 ) : NEW_LINE INDENT m = 0 NEW_LINE h += 1 ; NEW_LINE if ( h > 12 ) : NEW_LINE INDENT h = h - 12 ; NEW_LINE DEDENT DEDENT hour_angle = 0.5 * ( h * 60 + m ) NEW_LINE minute_angle = 6 * m NEW_LINE angle = abs ( hour_angle - minute_angle ) NEW_LINE angle = min ( 360 - angle , angle ) NEW_LINE return angle NEW_LINE DEDENT h = 9 NEW_LINE m = 60 NEW_LINE print ( ' Angle \u2581 ' , calcAngle ( h , m ) ) NEW_LINE\n",
+      "reference_code": "import java . io . * ; class GFG { static int calcAngle ( double h , double m ) { if ( h < 0 m < 0 h > 12 m > 60 ) System . out . println ( \" Wrong \u2581 input \" ) ; if ( h == 12 ) h = 0 ; if ( m == 60 ) { m = 0 ; h += 1 ; if ( h > 12 ) h = h - 12 ; } int hour_angle = ( int ) ( 0.5 * ( h * 60 + m ) ) ; int minute_angle = ( int ) ( 6 * m ) ; int angle = Math . abs ( hour_angle - minute_angle ) ; angle = Math . min ( 360 - angle , angle ) ; return angle ; } public static void main ( String [ ] args ) { System . out . println ( calcAngle ( 9 , 60 ) + \" \u2581 degree \" ) ; System . out . println ( calcAngle ( 3 , 30 ) + \" \u2581 degree \" ) ; } }\n",
+      "translated_code": "public class Main {\n    public static void main(String[] args) {\n        System.out.println(calcAngle(9, 60));\n    }\n\n    public static int calcAngle(int h, int m) {\n        if (h < 0 || m < 0 || h > 12 || m > 60) {\n            System.out.println(\"Wrong input\");\n            return -1; // Return a sentinel value to indicate error\n        }\n\n        if (h == 12) {\n            h = 0;\n        }\n        if (m == 60) {\n            m = 0;\n        }\n\n        h += 1;\n        if (h > 12) {\n            h = h - 12;\n        }\n\n        double hourAngle = 0.5 * (h * 60 + m);\n        double minuteAngle = 6 * m;\n        double angle = Math.abs(hourAngle - minuteAngle);\n        angle = Math.min(360 - angle, angle);\n\n        return (int) angle;\n    }\n}",
+      "bleu_1": 0.6811803741664085,
+      "bleu_2": 0.5945764316361549,
+      "bleu_4": 0.4498229305618628,
+      "keyword_match": 1.0,
+      "codebleu": 0.6148760513933039,
+      "inference_time": 41.18963432312012
+    }
+  ],
+  "python_to_cpp": [
+    {
+      "example_id": 0,
+      "source_code": "def calcAngle ( h , m ) : NEW_LINE INDENT if ( h < 0 or m < 0 or h > 12 or m > 60 ) : NEW_LINE INDENT print ( ' Wrong \u2581 input ' ) NEW_LINE DEDENT if ( h == 12 ) : NEW_LINE INDENT h = 0 NEW_LINE DEDENT if ( m == 60 ) : NEW_LINE INDENT m = 0 NEW_LINE h += 1 ; NEW_LINE if ( h > 12 ) : NEW_LINE INDENT h = h - 12 ; NEW_LINE DEDENT DEDENT hour_angle = 0.5 * ( h * 60 + m ) NEW_LINE minute_angle = 6 * m NEW_LINE angle = abs ( hour_angle - minute_angle ) NEW_LINE angle = min ( 360 - angle , angle ) NEW_LINE return angle NEW_LINE DEDENT h = 9 NEW_LINE m = 60 NEW_LINE print ( ' Angle \u2581 ' , calcAngle ( h , m ) ) NEW_LINE\n",
+      "reference_code": "#include <bits/stdc++.h> NEW_LINE using namespace std ; int min ( int x , int y ) { return ( x < y ) ? x : y ; } int calcAngle ( double h , double m ) { if ( h < 0 m < 0 h > 12 m > 60 ) printf ( \" Wrong \u2581 input \" ) ; if ( h == 12 ) h = 0 ; if ( m == 60 ) { m = 0 ; h += 1 ; if ( h > 12 ) h = h - 12 ; } float hour_angle = 0.5 * ( h * 60 + m ) ; float minute_angle = 6 * m ; float angle = abs ( hour_angle - minute_angle ) ; angle = min ( 360 - angle , angle ) ; return angle ; } int main ( ) { cout << calcAngle ( 9 , 60 ) << endl ; cout << calcAngle ( 3 , 30 ) << endl ; return 0 ; }\n",
+      "translated_code": "#include <iostream>\n\nint calcAngle(int h, int m) {\n    if (h < 0 || m < 0 || h > 12 || m > 60) {\n        std::cout << \"Wrong input\" << std::endl;\n        return -1; // Return an error code\n    }\n\n    if (h == 12) {\n        h = 0;\n    }\n    if (m == 60) {\n        m = 0;\n    }\n\n    h += 1;\n    if (h > 12) {\n        h = h - 12;\n    }\n\n    double hour_angle = 0.5 * (h * 60 + m);\n    double minute_angle = 6 * m;\n    double angle = std::abs(hour_angle - minute_angle);\n    angle = std::min(360 - angle, angle);\n\n    return static_cast<int>(angle);\n}\n\nint main() {\n    int h = 9;\n    int m = 60;\n    std::cout << \"Angle \" << calcAngle(h, m) << std::endl;\n    return 0;\n}",
+      "bleu_1": 0.7653061224489796,
+      "bleu_2": 0.6510467359823571,
+      "bleu_4": 0.4777525093287853,
+      "keyword_match": 0.888888888888889,
+      "codebleu": 0.6010934231968164,
+      "inference_time": 12.62154769897461
+    }
+  ],
+  "cpp_to_java": [
+    {
+      "example_id": 0,
+      "source_code": "#include <bits/stdc++.h> NEW_LINE using namespace std ; int min ( int x , int y ) { return ( x < y ) ? x : y ; } int calcAngle ( double h , double m ) { if ( h < 0 m < 0 h > 12 m > 60 ) printf ( \" Wrong \u2581 input \" ) ; if ( h == 12 ) h = 0 ; if ( m == 60 ) { m = 0 ; h += 1 ; if ( h > 12 ) h = h - 12 ; } float hour_angle = 0.5 * ( h * 60 + m ) ; float minute_angle = 6 * m ; float angle = abs ( hour_angle - minute_angle ) ; angle = min ( 360 - angle , angle ) ; return angle ; } int main ( ) { cout << calcAngle ( 9 , 60 ) << endl ; cout << calcAngle ( 3 , 30 ) << endl ; return 0 ; }\n",
+      "reference_code": "import java . io . * ; class GFG { static int calcAngle ( double h , double m ) { if ( h < 0 m < 0 h > 12 m > 60 ) System . out . println ( \" Wrong \u2581 input \" ) ; if ( h == 12 ) h = 0 ; if ( m == 60 ) { m = 0 ; h += 1 ; if ( h > 12 ) h = h - 12 ; } int hour_angle = ( int ) ( 0.5 * ( h * 60 + m ) ) ; int minute_angle = ( int ) ( 6 * m ) ; int angle = Math . abs ( hour_angle - minute_angle ) ; angle = Math . min ( 360 - angle , angle ) ; return angle ; } public static void main ( String [ ] args ) { System . out . println ( calcAngle ( 9 , 60 ) + \" \u2581 degree \" ) ; System . out . println ( calcAngle ( 3 , 30 ) + \" \u2581 degree \" ) ; } }\n",
+      "translated_code": "import java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        System.out.println(calcAngle(9, 60));\n        System.out.println(calcAngle(3, 30));\n        scanner.close();\n    }\n\n    public static int calcAngle(double h, double m) {\n        if (h < 0 || m < 0 || h > 12 || m > 60) {\n            System.out.println(\"Wrong input\");\n            return -1; // Return -1 to indicate invalid input\n        }\n        if (h == 12) h = 0;\n        if (m == 60) {\n            m = 0;\n            h += 1;\n            if (h > 12) h = h - 12;\n        }\n        float hourAngle = 0.5f * (h * 60 + m);\n        float minuteAngle = 6f * m;\n        float angle = Math.abs(hourAngle - minuteAngle);\n        angle = Math.min(360 - angle, angle);\n        return (int) angle;\n    }\n}",
+      "bleu_1": 0.7404712762621558,
+      "bleu_2": 0.6617786630047321,
+      "bleu_4": 0.5439298705097777,
+      "keyword_match": 0.9411764705882353,
+      "codebleu": 0.6631038505333149,
+      "inference_time": 41.07415533065796
+    }
+  ],
+  "cpp_to_python": [
+    {
+      "example_id": 0,
+      "source_code": "#include <bits/stdc++.h> NEW_LINE using namespace std ; int min ( int x , int y ) { return ( x < y ) ? x : y ; } int calcAngle ( double h , double m ) { if ( h < 0 m < 0 h > 12 m > 60 ) printf ( \" Wrong \u2581 input \" ) ; if ( h == 12 ) h = 0 ; if ( m == 60 ) { m = 0 ; h += 1 ; if ( h > 12 ) h = h - 12 ; } float hour_angle = 0.5 * ( h * 60 + m ) ; float minute_angle = 6 * m ; float angle = abs ( hour_angle - minute_angle ) ; angle = min ( 360 - angle , angle ) ; return angle ; } int main ( ) { cout << calcAngle ( 9 , 60 ) << endl ; cout << calcAngle ( 3 , 30 ) << endl ; return 0 ; }\n",
+      "reference_code": "def calcAngle ( h , m ) : NEW_LINE INDENT if ( h < 0 or m < 0 or h > 12 or m > 60 ) : NEW_LINE INDENT print ( ' Wrong \u2581 input ' ) NEW_LINE DEDENT if ( h == 12 ) : NEW_LINE INDENT h = 0 NEW_LINE DEDENT if ( m == 60 ) : NEW_LINE INDENT m = 0 NEW_LINE h += 1 ; NEW_LINE if ( h > 12 ) : NEW_LINE INDENT h = h - 12 ; NEW_LINE DEDENT DEDENT hour_angle = 0.5 * ( h * 60 + m ) NEW_LINE minute_angle = 6 * m NEW_LINE angle = abs ( hour_angle - minute_angle ) NEW_LINE angle = min ( 360 - angle , angle ) NEW_LINE return angle NEW_LINE DEDENT h = 9 NEW_LINE m = 60 NEW_LINE print ( ' Angle \u2581 ' , calcAngle ( h , m ) ) NEW_LINE\n",
+      "translated_code": "import math\n\ndef min(x, y):\n    return x if x < y else y\n\ndef calc_angle(h, m):\n    if h < 0 or m < 0 or h > 12 or m > 60:\n        return \"Wrong input\"\n    if h == 12:\n        h = 0\n    if m == 60:\n        m = 0\n        h += 1\n        if h > 12:\n            h = h - 12\n    hour_angle = 0.5 * (h * 60 + m)\n    minute_angle = 6 * m\n    angle = abs(hour_angle - minute_angle)\n    angle = min(360 - angle, angle)\n    return angle\n\nprint(calc_angle(9, 60))\nprint(calc_angle(3, 30))",
+      "bleu_1": 0.6748882324362108,
+      "bleu_2": 0.5518653322780928,
+      "bleu_4": 0.39975445371177576,
+      "keyword_match": 0.8,
+      "codebleu": 0.519828117598243,
+      "inference_time": 11.273693799972534
+    }
+  ]
+}
