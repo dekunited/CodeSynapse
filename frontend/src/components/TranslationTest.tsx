@@ -115,7 +115,6 @@ export default function TranslationTest() {
 
       <div className="editor-row">
         <div className="editor-column">
-          <label htmlFor="source-code">From</label>
           <textarea
             id="source-code"
             className="code-input"
@@ -130,7 +129,6 @@ export default function TranslationTest() {
         </div>
 
         <div className="editor-column">
-          <label htmlFor="translated-code">To</label>
           <textarea
             id="translated-code"
             className="code-output"
