@@ -1,5 +1,4 @@
 import './App.css'
-import GetRequestButton from './components/GetRequestButton'
 import TranslationTest from './components/TranslationTest'
 
 function App() {
@@ -7,7 +6,6 @@ function App() {
   return (
     <>
       <TranslationTest />
-      <GetRequestButton />
     </>
   )
 }
