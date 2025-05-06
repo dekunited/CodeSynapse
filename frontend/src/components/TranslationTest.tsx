@@ -7,6 +7,36 @@ interface TranslationRequest {
   code: string;
 }
 
+function decodePseudoCode(input: string): string {
+  const cleanedInput = input
+    .replace(/â–|␣/g, ' ') // Replace weird space chars
+    .replace(/\bINDENT\b/g, '') // Remove INDENT for spacing
+    .replace(/\bDEDENT\b/g, '') // Remove DEDENT
+
+  const tokens = cleanedInput.split('NEW_LINE')
+  const lines: string[] = []
+  let indentLevel = 0
+  const indent = () => '  '.repeat(indentLevel)
+
+  for (let token of tokens) {
+    token = token.trim()
+    if (!token) continue
+
+    if (token === 'INDENT') {
+      indentLevel++
+    } else if (token === 'DEDENT') {
+      indentLevel = Math.max(0, indentLevel - 1)
+    } else {
+      const segments = token.split(';').map(s => s.trim()).filter(Boolean)
+      for (let segment of segments) {
+        lines.push(indent() + segment + (token.includes(';') ? ';' : ''))
+      }
+    }
+  }
+
+  return lines.join('\n')
+}
+
 export default function TranslationTest() {
   const [sourceLanguage, setSourceLanguage] = useState<string>('python')
   const [targetLanguage, setTargetLanguage] = useState<string>('java')
@@ -16,49 +46,7 @@ export default function TranslationTest() {
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<string | null>(null)
 
-  function decodePseudoCode(input: string): string {
-      // const lines: string[] = []
-      // const tokens = input.replace(/â–|␣/g, ' ').split('NEW_LINE')
-      const cleanedInput = input.replace(/â–|␣/g, ' ')           // Replace weird space chars
-        .replace(/\bINDENT\b/g, '  ')       // Remove INDENT
-        .replace(/\bDEDENT\b/g, ' ')       // Remove DEDENT
-      let indentLevel = 0
-      const indent = () => '  '.repeat(indentLevel)
-
-      const tokens = cleanedInput.split('NEW_LINE')
-        const lines: string[] = []
-
-        for (let token of tokens) {
-          token = token.trim()
-          if (!token) continue
-
-          const segments = token.split(';').map(s => s.trim()).filter(Boolean)
-          for (let segment of segments) {
-            lines.push(segment)
-          }
-        }
-            
-      for (let token of tokens) {
-        token = token.trim()
-    
-        if (token === 'INDENT') {
-          indentLevel++
-        } else if (token === 'DEDENT') {
-          input.replace('DEDENT', ' ')
-          indentLevel = Math.max(0, indentLevel - 1)
-        } else if (token) {
-          // Split at semicolons to create multiple lines from one token
-          const segments = token.split(';').map(s => s.trim()).filter(Boolean)
-          for (let segment of segments) {
-            lines.push(indent() + segment)
-          }
-        }
-      }
-    
-      return lines.join('\n')
-    }
-  
-    const handleSubmit = async (): Promise<void> => {
+  const handleSubmit = async (): Promise<void> => {
     setLoading(true)
     setError(null)
 
@@ -83,12 +71,7 @@ export default function TranslationTest() {
   const languages = [
     { value: 'python', label: 'Python' },
     { value: 'java', label: 'Java' },
-    // { value: 'javascript', label: 'JavaScript' },
-    // { value: 'go', label: 'Go' },
     { value: 'cpp', label: 'C++' },
-    // { value: 'csharp', label: 'C#' },
-    // { value: 'typescript', label: 'TypeScript' },
-    // { value: 'rust', label: 'Rust' }
   ]
 
   return (
@@ -97,7 +80,7 @@ export default function TranslationTest() {
       <h5>Bridge the Syntax, Power the Future!</h5>
 
       <div className="select-group">
-        <div className="select-block">
+        <div className="select-block align-left">
           <label htmlFor="source-lang">From</label>
           <select
             id="source-lang"
@@ -110,7 +93,7 @@ export default function TranslationTest() {
           </select>
         </div>
 
-        <div className="select-block">
+        <div className="select-block align-right">
           <label htmlFor="target-lang">To</label>
           <select
             id="target-lang"
@@ -124,40 +107,42 @@ export default function TranslationTest() {
         </div>
       </div>
 
-      <textarea
-        className="code-input"
-        placeholder="Enter source code here..."
-        rows={10}
-        value={sourceCode}
-        onChange={(e) => {
-          const raw = e.target.value
-          const formatted = decodePseudoCode(raw)
-          setSourceCode(formatted)
-        }}
-      ></textarea>
+      <div className="editor-row">
+        <div className="editor-column">
+          <label htmlFor="source-code">From</label>
+          <textarea
+            id="source-code"
+            className="code-input"
+            placeholder="Enter source code here..."
+            value={sourceCode}
+            onChange={(e) => {
+              const raw = e.target.value
+              const formatted = decodePseudoCode(raw)
+              setSourceCode(formatted)
+            }}
+          ></textarea>
+        </div>
 
+        <div className="editor-column">
+          <label htmlFor="translated-code">To</label>
+          <textarea
+            id="translated-code"
+            className="code-output"
+            value={translatedCode}
+            readOnly
+          ></textarea>
+        </div>
+      </div>
 
       <button
         className="translation-button"
         onClick={handleSubmit}
         disabled={loading || !sourceCode.trim()}
       >
-        {loading ? 'Translating...' : 'Translate Code'}
+        {loading ? <span className="loader"></span> : 'Translate Code'}
       </button>
 
       {error && <p className="error-message">{error}</p>}
-
-      {translatedCode && (
-        <div className="result-block">
-          <p className="model-used">Translated with {modelUsed}</p>
-          <textarea
-            className="code-output"
-            rows={10}
-            value={translatedCode}
-            readOnly
-          ></textarea>
-        </div>
-      )}
     </div>
   )
 }
