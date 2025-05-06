@@ -30,7 +30,7 @@ To run the containers, you can utilize the provided shell script: `./run_dev.sh`
 - Please note that both the frontend and backend have hot reload enabled (vite, air), so there's no need to teardown everything when adding changes. Only time you will need to rebuild the container is if you install any new dependencies. 
 
 
-### 🤖 LLMs
+### 🤖 Accessing & Running the LLMs
 CodeSynapse has access to 4 models for translation:
 
 | Model | Type | Requirements |
@@ -40,7 +40,7 @@ CodeSynapse has access to 4 models for translation:
 | **deepseek-coder:6.7B** | Local | Ran locally using Ollama |
 | **phi:2.7B** | Local | Ran locally using Ollama |
 
-#### 🧙 API Configuration
+#### API Configuration
 
 Below is the required `.env` file needed to access both GPT4o and Llama 3.2 using this application:
 
@@ -65,4 +65,30 @@ Additionally, when running these, you will need to add the local url to your .en
 # URL for locally running OLLAMA instance
 OLLAMA_URL: http://host.docker.internal:PORTNUMBER/api/generate
 ```
+
+## 📚 Project Results
+For this study, we evaluated three  different LLMs: 
+1. **Llama-3.2/3B**
+2. **Deepseek-Coder/6.7B**
+3. **Phi/2.7B**
+
+*NOTE*: While the application does also use GPT4o, we did not evaluate that model as it would be quite expensive to do so.
+
+### Dataset: 
+We used the [XLCoST Dataset](), which provides hundreds of code samples for different programming problems in various langugaes. Here, we decided to focus on three languages: *Java*, *Python*, and *C++*. Additionally, we took 100 samples for each language and ended up having a 100 programming problems implemented in the three different languages.
+
+
+### Methodology: 
+Using the dataset, we evaluated each LLM by having it translate a shared set of code snippets between the three selected languages. We used the *CodeBleu*, *Bleu4*, and *keyword match* metrics to evaluate the translations. 
+
+### Result: 
+
+| BLEU4   | Keyword Match | CodeBLEU |
+|---------|---------------|----------|
+| ![bleu4](./imgs/bleu4.jpg) | ![keywordmatch](./imgs/keywordmatch.jpg) | ![codeBleu](./imgs/codebleu.jpg) |
+
+We found that overall, Llama 3.2 3B performed the best for almost all of the code translations tasks. However, Deepseek-Coder performed better for C++ to Java tasks. In the context of this study, we didn't find any correlation between model size and translation ability, as Llama 3.2 3B was much smaller than Deepseek-Coder 6.7B and mostly outperformed it. 
+
+This leads us to believe that smaller LLMs are still capable of outperforming larger LLMs in the realm of code translation. 
+
 
