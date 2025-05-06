@@ -18,31 +18,19 @@ import (
 )
 
 /*
- * Map for storing best models for each translation
- */
-var bestTranslationMap = map[string]string{
-	"go-python":   "GPT4o",
-	"java-python": "Llama",
-	"java-cpp":    "Llama",
-	"python-java": "Llama",
-	"python-cpp":  "Llama",
-	"cpp-python":  "Llama",
-	"cpp-java":    "DeepSeek-Coder",
-}
-
-/*
  * TranslateCode() will call the corresponding model that is best at the
  * given code translation pair.
  */
 func TranslateCode(ctx context.Context, req TranslationRequest) (*TranslationResponse, error) {
-	model, ok := bestTranslationMap[req.Translation]
-	if !ok {
-		log.Printf("[TranslateCode]: Given translation pair not found.")
+	if req.Model == "" {
+		log.Println("[TranslateCode]: Error. No model provided")
 		return nil, errors.ErrUnsupported
 	}
 
+	model := req.Model
+
 	switch model {
-	case "GPT4o":
+	case "gpt4o":
 		log.Printf(
 			"[TranslateCode]: Translation supported -- using %s for %s\n",
 			model,
@@ -60,7 +48,7 @@ func TranslateCode(ctx context.Context, req TranslationRequest) (*TranslationRes
 
 		return resp, nil
 
-	case "Llama":
+	case "llama-3.2-3b":
 		log.Printf(
 			"[TranslateCode]: Translation supported -- using %s for %s\n",
 			model,
@@ -78,7 +66,7 @@ func TranslateCode(ctx context.Context, req TranslationRequest) (*TranslationRes
 
 		return resp, nil
 
-	case "DeepSeek-Coder":
+	case "deepseek-6.7b":
 		log.Printf(
 			"[TranslateCode]: Translation supported -- using %s for %s\n",
 			model,
@@ -96,7 +84,7 @@ func TranslateCode(ctx context.Context, req TranslationRequest) (*TranslationRes
 
 		return resp, nil
 
-	case "Phi2":
+	case "phi-2.7b":
 		log.Printf(
 			"[TranslateCode]: Translation supported -- using %s for %s\n",
 			model,
@@ -201,7 +189,7 @@ func ParseModelResponse(modelResp string) *TranslationResponse {
 		}
 	}
 
-	log.Println("[ParseModelResponse]: Prased and Translated code:\n", resp.TranslatedCode)
+	log.Println("[ParseModelResponse]: Code has been successfully parsed and translated...")
 	return &resp
 }
 
@@ -271,7 +259,7 @@ func OpenAIRequest(ctx context.Context, prompt string) (*TranslationResponse, er
 	// Grab the response, parse, return
 	modelResponse := chatCompletion.Choices[0].Message.Content
 	resp := ParseModelResponse(modelResponse)
-	resp.ModelUsed = "GPT4o"
+	resp.ModelUsed = "gpt4o"
 
 	return resp, nil
 }
@@ -374,7 +362,7 @@ func LlamaRequest(ctx context.Context, prompt string) (*TranslationResponse, err
 	}
 
 	response := ParseModelResponse(content)
-	response.ModelUsed = "Llama 3.2"
+	response.ModelUsed = "llama-3.2-3b"
 	return response, nil
 }
 
@@ -416,7 +404,7 @@ func DeepSeekRequest(ctx context.Context, prompt string) (*TranslationResponse, 
 
 	modelResponse := responseMap["response"].(string)
 	response := ParseModelResponse(modelResponse)
-	response.ModelUsed = "DeepSeek-Coder"
+	response.ModelUsed = "deepseek-6.7b"
 
 	return response, nil
 }
@@ -458,7 +446,10 @@ func PhiRequest(ctx context.Context, prompt string, code string) (*TranslationRe
 
 	modelResponse := responseMap["response"].(string)
 	response := ParsePhiModelResponse(modelResponse)
-	response.ModelUsed = "Phi2"
+	if response.TranslatedCode == "" {
+		response.TranslatedCode = modelResponse
+	}
+	response.ModelUsed = "phi-2.7b"
 
 	return response, nil
 }

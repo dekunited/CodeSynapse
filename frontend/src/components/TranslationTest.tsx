@@ -1,10 +1,11 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import axios from 'axios'
 import '../../styles/translation_ui.css'
 
 interface TranslationRequest {
   translation: string;
   code: string;
+  model?: string;
 }
 
 interface TranslationResponse {
@@ -18,9 +19,25 @@ interface Language {
   benchmarked: boolean;
 }
 
+interface Model {
+  value: string;
+  label: string;
+}
+
+// Map of benchmarked language pairs to their best models (using API values)
+const bestTranslationMap: Record<string, string> = {
+  'java-python': 'llama-3.2-3b',
+  'java-cpp': 'llama-3.2-3b',
+  'python-java': 'llama-3.2-3b',
+  'python-cpp': 'llama-3.2-3b',
+  'cpp-python': 'llama-3.2-3b',
+  'cpp-java': 'deepseek-6.7b',
+  'go-python': 'gpt4o',
+}
+
 function decodePseudoCode(input: string): string {
   const cleanedInput = input
-    .replace(/â–|␣/g, ' ') // Replace weird space chars
+    .replace(/â–|␣/g, ' ') // Replace weird space chars
     .replace(/\bINDENT\b/g, '') // Remove INDENT for spacing
     .replace(/\bDEDENT\b/g, '') // Remove DEDENT
 
@@ -46,7 +63,6 @@ function decodePseudoCode(input: string): string {
   }
 
   return lines.join('\n')
-
 }
 
 export default function TranslationTest() {
@@ -54,24 +70,76 @@ export default function TranslationTest() {
   const [targetLanguage, setTargetLanguage] = useState<string>('java')
   const [sourceCode, setSourceCode] = useState<string>('')
   const [translatedCode, setTranslatedCode] = useState<string>('')
-  const [modelUsed, setModelUsed] = useState<string>('')
+  const [selectedModel, setSelectedModel] = useState<string>('')
+  const [defaultModel, setDefaultModel] = useState<string>('')
+  const [isDefaultModel, setIsDefaultModel] = useState<boolean>(true)
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<string | null>(null)
+
+  // Define available models with consistent values for API
+  const models: Model[] = [
+    { value: 'llama-3.2-3b', label: 'Llama-3.2/3B' },
+    { value: 'deepseek-6.7b', label: 'Deepseek-coder/6.7B' },
+    { value: 'phi-2.7b', label: 'Phi/2.7B' },
+    { value: 'gpt4o', label: 'GPT4o' }
+  ];
+
+  // Determine the best model based on language pair
+  // Default to GPT4o for unbenchmarked pairs
+  const getBestModel = (source: string, target: string): string => {
+    const key = `${source}-${target}`
+
+    if (key in bestTranslationMap) {
+      return bestTranslationMap[key]
+    }
+
+    return 'gpt4o'
+  }
+
+  // Initialize default model on first load
+  useEffect(() => {
+    const best = getBestModel(sourceLanguage, targetLanguage)
+    setDefaultModel(best)
+    setSelectedModel(best)
+  }, [])
+
+  // Update the default model when source or target languages change
+  useEffect(() => {
+    const bestModel = getBestModel(sourceLanguage, targetLanguage)
+    setDefaultModel(bestModel)
+    setSelectedModel(bestModel)
+    setIsDefaultModel(true)
+  }, [sourceLanguage, targetLanguage])
+
+  // Handle model selection changes
+  const handleModelChange = (model: string) => {
+    setSelectedModel(model)
+    setIsDefaultModel(model === getBestModel(sourceLanguage, targetLanguage))
+  }
 
   const handleSubmit = async (): Promise<void> => {
     setLoading(true)
     setError(null)
 
     try {
+      // Apply the decodePseudoCode transformation only at submission time, so the user can still type
+      const processedCode = decodePseudoCode(sourceCode)
+
       const request: TranslationRequest = {
         translation: `${sourceLanguage}-${targetLanguage}`,
-        code: sourceCode
+        code: processedCode,
+        model: selectedModel
       }
 
       const response = await axios.post<TranslationResponse>('http://localhost:8080/api/translate', request)
+      const responseModel = response.data.modelUsed
+      const knownModel = models.find(m => m.value === responseModel || m.label === responseModel)
 
       setTranslatedCode(response.data.translatedCode)
-      setModelUsed(response.data.modelUsed)
+      if (knownModel) {
+        setSelectedModel(knownModel.value)
+      }
+
     } catch (err) {
       console.error('Translation error:', err)
       setError('Failed to translate code. Please try again.')
@@ -80,7 +148,6 @@ export default function TranslationTest() {
     }
   }
 
-  // Updated languages array with benchmarked property
   const languages: Language[] = [
     // Benchmarked languages
     { value: 'python', label: 'Python', benchmarked: true },
@@ -126,24 +193,6 @@ export default function TranslationTest() {
     )
   }
 
-  const llmModelOption = () => {
-    const models = [
-      { value: 'llama-3.2-3b', label: 'Llama-3.2/3B' },
-      { value: 'deepseek-6.7b', label: 'Deepseek-coder/6.7B' },
-      { value: 'phi-2.7b', label: 'Phi/2.7B' }
-    ];
-  
-    return (
-      <>
-        {models.map(model => (
-          <option key={model.value} value={model.value}>
-            {model.label}
-          </option>
-        ))}
-      </>
-    );
-  }
-
   return (
     <div className="container">
       <h1>CodeSynapse</h1>
@@ -162,13 +211,20 @@ export default function TranslationTest() {
         </div>
 
         <div className="select-block align-center">
-          <label htmlFor="llm-model">LLM Model</label>
+          <label htmlFor="llm-model">
+            LLM Options
+          </label>
           <select
             id="llm-model"
-            value={modelUsed}
-            onChange={(e) => setModelUsed(e.target.value)}
+            value={selectedModel}
+            onChange={(e) => handleModelChange(e.target.value)}
           >
-            {llmModelOption()}
+            {models.map(model => (
+              <option key={model.value} value={model.value}>
+                {model.label}
+                {model.value === defaultModel && ' (recommended)'}
+              </option>
+            ))}
           </select>
         </div>
 
@@ -191,11 +247,7 @@ export default function TranslationTest() {
             className="code-input"
             placeholder="Enter source code here..."
             value={sourceCode}
-            onChange={(e) => {
-              const raw = e.target.value
-              const formatted = decodePseudoCode(raw)
-              setSourceCode(formatted)
-            }}
+            onChange={(e) => setSourceCode(e.target.value)}
           ></textarea>
         </div>
 
@@ -214,7 +266,11 @@ export default function TranslationTest() {
         onClick={handleSubmit}
         disabled={loading || !sourceCode.trim()}
       >
-        {loading ? <span className="loader"></span> : 'Translate Code'}
+        {loading ? (
+          <span className="loader"></span>
+        ) : (
+          `Translate Code`
+        )}
       </button>
 
       {error && <p className="error-message">{error}</p>}
