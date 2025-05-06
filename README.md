@@ -91,4 +91,7 @@ We found that overall, Llama 3.2 3B performed the best for almost all of the cod
 
 This leads us to believe that smaller LLMs are still capable of outperforming larger LLMs in the realm of code translation. 
 
+### Presentation
+
+[Presentation slides](Final_Presentation.pdf)
 
