@@ -7,6 +7,11 @@ interface TranslationRequest {
   code: string;
 }
 
+interface TranslationResponse {
+  translatedCode: string;
+  modelUsed: string;
+}
+
 function decodePseudoCode(input: string): string {
   const cleanedInput = input
     .replace(/â–|␣/g, ' ') // Replace weird space chars
@@ -35,6 +40,7 @@ function decodePseudoCode(input: string): string {
   }
 
   return lines.join('\n')
+
 }
 
 export default function TranslationTest() {
@@ -55,8 +61,8 @@ export default function TranslationTest() {
         translation: `${sourceLanguage}-${targetLanguage}`,
         code: sourceCode
       }
-
-      const response = await axios.post('http://localhost:8080/api/translate', request)
+  
+      const response = await axios.post<TranslationResponse>('http://localhost:8080/api/translate', request)
 
       setTranslatedCode(response.data.translatedCode)
       setModelUsed(response.data.modelUsed)

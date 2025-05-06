@@ -19,6 +19,8 @@ Before you begin, make sure you have the following installed:
   - Required for building and running the frontend code.
 - **[pnpm](https://pnpm.io/)**
   - Install with: `npm install -g pnpm` (or `brew install pnpm` for macOS).
+- **[Ollama]()**
+    - Needed to run models locally (NOTE: this is pretty resource intensive so i recommend having ~16GB of RAM)
 
 ### ⚙️ Development Workflow + How to Run
 To run the containers, you can utilize the provided shell script: `./run_dev.sh`
@@ -26,3 +28,10 @@ To run the containers, you can utilize the provided shell script: `./run_dev.sh`
 - Then, it will run everything with `docker compose up`
 - When interrupted with `ctrl+c`, it will tear down everything with `docker compose down`
 - Please note that both the frontend and backend have hot reload enabled (vite, air), so there's no need to teardown everything when adding changes. Only time you will need to rebuild the container is if you install any new dependencies. 
+
+## TODO
+- **Running the models**
+    - deepseek-coder:6.7B
+    - phi:2.7B
+`CUDA_VISIBLE_DEVICES=0 ollama serve`
+

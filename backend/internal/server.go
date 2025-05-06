@@ -13,8 +13,8 @@ import (
 )
 
 /*
-Run() will start up the http server and listen for any errors
-*/
+ * Run() will start up the http server and listen for any errors
+ */
 func Run(ctx context.Context, w io.Writer) error {
 	ctx, cancel := signal.NotifyContext(ctx, os.Interrupt)
 	defer cancel()
@@ -58,8 +58,8 @@ func Run(ctx context.Context, w io.Writer) error {
 }
 
 /*
-NewServer() sets up the routes, middleware, etc.
-*/
+ * NewServer() sets up the routes, middleware, etc.
+ */
 func NewServer() http.Handler {
 	mux := http.NewServeMux()
 	AddRoutes(mux)
