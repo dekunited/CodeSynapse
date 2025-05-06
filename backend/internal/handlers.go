@@ -9,7 +9,7 @@ import (
 type TranslationRequest struct {
 	Translation string  `json:"translation"`
 	Code        string  `json:"code"`
-	Prompt      *string `json:"prompt,omitempty"`
+	Prompt      *string `json:"prompt,omitempty"` // might not need depending on setup for other models
 }
 
 type TranslationResponse struct {
@@ -22,7 +22,6 @@ type TranslationResponse struct {
  */
 
 func AddRoutes(mux *http.ServeMux) {
-	mux.Handle("/hello", HandleHelloHandler("hello"))
 	mux.Handle("/api/translate", TranslateHandler())
 }
 
@@ -43,31 +42,21 @@ func TranslateHandler() http.Handler {
 			err := json.NewDecoder(r.Body).Decode(&req)
 			if err != nil {
 				http.Error(w, err.Error(), http.StatusBadRequest)
+        log.Printf("[TranslateHandler]: Error decoding request: %v", err)
 				return
 			}
 
-			log.Printf("Translation request received: %s\n", req.Translation)
+      log.Printf("[TranslateHandler]: Translation request received")
 
 			// Translate the Code
 			_, err = TranslateCode(r.Context(), req)
 			if err != nil {
 				http.Error(w, err.Error(), http.StatusInternalServerError)
-        log.Println("TranslateHandler(): Error during translation: ", err)
+        log.Printf("[TranslateHandler]: Error translating code:\n%v", err)
 				return
 			}
 
 			// encode response, return TODO
-		},
-	)
-}
-
-func HandleHelloHandler(hello string) http.Handler {
-	hello2 := hello + "2"
-	return http.HandlerFunc(
-		func(w http.ResponseWriter, r *http.Request) {
-			w.Header().Set("Content-Type", "application/json")
-			w.Write([]byte(`{"message": "` + hello2 + `"}`))
-			log.Printf("HandleHelloHandler(): Request recieved")
 		},
 	)
 }
