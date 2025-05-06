@@ -375,7 +375,7 @@ func LlamaRequest(ctx context.Context, prompt string) (*TranslationResponse, err
 
 	response := ParseModelResponse(content)
 	response.ModelUsed = "Llama 3.2"
-	return nil, nil
+	return response, nil
 }
 
 /*
@@ -418,7 +418,7 @@ func DeepSeekRequest(ctx context.Context, prompt string) (*TranslationResponse, 
 	response := ParseModelResponse(modelResponse)
 	response.ModelUsed = "DeepSeek-Coder"
 
-	return nil, nil
+	return response, nil
 }
 
 /*
@@ -460,5 +460,5 @@ func PhiRequest(ctx context.Context, prompt string, code string) (*TranslationRe
 	response := ParsePhiModelResponse(modelResponse)
 	response.ModelUsed = "Phi2"
 
-	return nil, nil
+	return response, nil
 }

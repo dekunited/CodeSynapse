@@ -4,12 +4,13 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+  "strings"
 )
 
 type TranslationRequest struct {
 	Translation string  `json:"translation"`
 	Code        string  `json:"code"`
-	Prompt      *string `json:"prompt,omitempty"` // might not need depending on setup for other models
+	Model       *string `json:"model,omitempty"`
 }
 
 type TranslationResponse struct {
@@ -18,7 +19,7 @@ type TranslationResponse struct {
 }
 
 /*
- * Define the actual routes here
+ * Define routes here
  */
 
 func AddRoutes(mux *http.ServeMux) {
@@ -42,22 +43,35 @@ func TranslateHandler() http.Handler {
 			err := json.NewDecoder(r.Body).Decode(&req)
 			if err != nil {
 				http.Error(w, err.Error(), http.StatusBadRequest)
-        log.Printf("[TranslateHandler]: Error decoding request: %v", err)
+				log.Printf("[TranslateHandler]: Error decoding request: %v", err)
 				return
 			}
 
-      log.Printf("[TranslateHandler]: Translation request received")
+			log.Printf("[TranslateHandler]: Translation request received")
 
 			// Translate the Code
-			_, err = TranslateCode(r.Context(), req)
+			translationResp, err := TranslateCode(r.Context(), req)
 			if err != nil {
+        if strings.Contains(err.Error(), "connection refused") {
+          http.Error(w, err.Error(), http.StatusServiceUnavailable)
+          log.Printf("[TranslateHandler]: Model or service is unavailable")
+          return
+        }
 				http.Error(w, err.Error(), http.StatusInternalServerError)
-        log.Printf("[TranslateHandler]: Error translating code:\n%v", err)
+				log.Printf("[TranslateHandler]: Error translating code:\n%v", err)
 				return
 			}
 
-			// encode response, return TODO
+      // Return
+			w.Header().Set("Content-Type", "application/json")
+			w.WriteHeader(http.StatusOK)
+
+			err = json.NewEncoder(w).Encode(translationResp)
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				log.Printf("[TranslateHandler]: Error encoding response:\n%v", err)
+				return
+			}
 		},
 	)
 }
-

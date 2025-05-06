@@ -7,15 +7,15 @@ interface TranslationRequest {
   code: string;
 }
 
-/*
+
 interface TranslationResponse {
   translatedCode: string;
   modelUsed: string;
-}*/
+}
 
 export default function TranslationTest() {
-  const [sourceLanguage, setSourceLanguage] = useState<string>('python')
-  const [targetLanguage, setTargetLanguage] = useState<string>('java')
+  const [sourceLanguage, setSourceLanguage] = useState<string>('')
+  const [targetLanguage, setTargetLanguage] = useState<string>('')
   const [sourceCode, setSourceCode] = useState<string>('')
   const [translatedCode, setTranslatedCode] = useState<string>('')
   const [modelUsed, setModelUsed] = useState<string>('')
@@ -32,7 +32,7 @@ export default function TranslationTest() {
         code: sourceCode
       }
       
-      const response = await axios.post('http://localhost:8080/api/translate', request)
+      const response = await axios.post<TranslationResponse>('http://localhost:8080/api/translate', request)
       
       setTranslatedCode(response.data.translatedCode)
       setModelUsed(response.data.modelUsed)
