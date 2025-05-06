@@ -1,6 +1,9 @@
 # Data processing
 This directory contains the code + resulting CSV for parsing the full programs contained in the [XLCoST](https://github.com/reddy-lab-code-research/XLCoST) dataset. The goal was to gather a set of programs that were implemented in multiple languages in order to evaluate different LLMs for code-translation tasks.
 
+Additionally, it also contains all code used for training and gathering our data/insights as to which models perform best for which language translation pairs. For more information about how the models performed, please visit their corresponding directories or view our final paper/presentation. 
+
+
 ## Dataset Info 
 The *XLCoST* dataset contains mapping files to assist with finding which lines in each code file correspond to which specific problem. This differs between the snippets and full program data so *please note: we used the full program data and as such, this script is mainly for the full program data. It will need to be modified further to work on the snippets data*. 
 
@@ -18,7 +21,7 @@ train-C-C#-tok.c
 This single line containing the entire program corresponds to problem 10113
 ```
 
-## Script Info 
+## Dataset Gathering Script Info 
 This script, again, is primarily for the program data. It will go through all translations, match the corresponding problem id to theline containing the program, and match them across languages. If a problem was implemented in all 7 languages, it was then added to our CSV. 
 
 The script assumes you have the `pair_data_tok_full/` folder in your current directory.
