@@ -75,13 +75,13 @@ For this study, we evaluated three  different LLMs:
 *NOTE*: While the application does also use GPT4o, we did not evaluate that model as it would be quite expensive to do so.
 
 ### Dataset: 
-We used the [XLCoST Dataset](), which provides hundreds of code samples for different programming problems in various langugaes. Here, we decided to focus on three languages: *Java*, *Python*, and *C++*. Additionally, we took 100 samples for each language and ended up having a 100 programming problems implemented in the three different languages.
+We used the [XLCoST Dataset](https://github.com/reddy-lab-code-research/XLCoST), which provides hundreds of code samples for different programming problems in various langugaes. Here, we decided to focus on three languages: *Java*, *Python*, and *C++*. Additionally, we took 100 samples for each language and ended up having a 100 programming problems implemented in the three different languages.
 
 
 ### Methodology: 
 Using the dataset, we evaluated each LLM by having it translate a shared set of code snippets between the three selected languages. We used the *CodeBleu*, *Bleu4*, and *keyword match* metrics to evaluate the translations. 
 
-### Result: 
+### Results: 
 
 | BLEU4   | Keyword Match | CodeBLEU |
 |---------|---------------|----------|

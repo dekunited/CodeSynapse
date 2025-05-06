@@ -5,6 +5,7 @@ function App() {
 
   return (
     <>
+      <title>CodeSynapse</title>
       <TranslationTest />
     </>
   )
