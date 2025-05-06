@@ -67,7 +67,7 @@ export default function TranslationTest() {
         translation: `${sourceLanguage}-${targetLanguage}`,
         code: sourceCode
       }
-  
+
       const response = await axios.post<TranslationResponse>('http://localhost:8080/api/translate', request)
 
       setTranslatedCode(response.data.translatedCode)
@@ -80,13 +80,13 @@ export default function TranslationTest() {
     }
   }
 
-   // Updated languages array with benchmarked property
+  // Updated languages array with benchmarked property
   const languages: Language[] = [
     // Benchmarked languages
     { value: 'python', label: 'Python', benchmarked: true },
     { value: 'java', label: 'Java', benchmarked: true },
     { value: 'cpp', label: 'C++', benchmarked: true },
-    
+
     // Unbenchmarked languages
     { value: 'csharp', label: 'C#', benchmarked: false },
     { value: 'javascript', label: 'JavaScript', benchmarked: false },
@@ -98,13 +98,13 @@ export default function TranslationTest() {
   const renderLanguageOptions = () => {
     const benchmarkedLanguages = languages.filter(lang => lang.benchmarked)
     const unbenchmarkedLanguages = languages.filter(lang => !lang.benchmarked)
-    
+
     return (
       <>
         <optgroup label="Benchmarked Languages">
           {benchmarkedLanguages.map(lang => (
-            <option 
-              key={lang.value} 
+            <option
+              key={lang.value}
               value={lang.value}
             >
               {lang.label}
@@ -113,8 +113,8 @@ export default function TranslationTest() {
         </optgroup>
         <optgroup label="Unbenchmarked Languages">
           {unbenchmarkedLanguages.map(lang => (
-            <option 
-              key={lang.value} 
+            <option
+              key={lang.value}
               value={lang.value}
               className="unbenchmarked-option"
             >
@@ -139,9 +139,7 @@ export default function TranslationTest() {
             value={sourceLanguage}
             onChange={(e) => setSourceLanguage(e.target.value)}
           >
-            {languages.map(lang => (
-              <option key={lang.value} value={lang.value}>{lang.label}</option>
-            ))}
+            {renderLanguageOptions()}
           </select>
         </div>
 
@@ -152,9 +150,7 @@ export default function TranslationTest() {
             value={targetLanguage}
             onChange={(e) => setTargetLanguage(e.target.value)}
           >
-            {languages.map(lang => (
-              <option key={lang.value} value={lang.value}>{lang.label}</option>
-            ))}
+            {renderLanguageOptions()}
           </select>
         </div>
       </div>
