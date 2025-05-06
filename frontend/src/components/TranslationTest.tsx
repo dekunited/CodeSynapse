@@ -13,8 +13,8 @@ interface TranslationResponse {
 }
 
 export default function TranslationTest() {
-  const [sourceLanguage, setSourceLanguage] = useState<string>('')
-  const [targetLanguage, setTargetLanguage] = useState<string>('')
+  const [sourceLanguage, setSourceLanguage] = useState<string>('python')
+  const [targetLanguage, setTargetLanguage] = useState<string>('java')
   const [sourceCode, setSourceCode] = useState<string>('')
   const [translatedCode, setTranslatedCode] = useState<string>('')
   const [modelUsed, setModelUsed] = useState<string>('')
