@@ -12,6 +12,12 @@ interface TranslationResponse {
   modelUsed: string;
 }
 
+interface Language {
+  value: string;
+  label: string;
+  benchmarked: boolean;
+}
+
 function decodePseudoCode(input: string): string {
   const cleanedInput = input
     .replace(/â–|␣/g, ' ') // Replace weird space chars
@@ -74,11 +80,51 @@ export default function TranslationTest() {
     }
   }
 
-  const languages = [
-    { value: 'python', label: 'Python' },
-    { value: 'java', label: 'Java' },
-    { value: 'cpp', label: 'C++' },
+   // Updated languages array with benchmarked property
+  const languages: Language[] = [
+    // Benchmarked languages
+    { value: 'python', label: 'Python', benchmarked: true },
+    { value: 'java', label: 'Java', benchmarked: true },
+    { value: 'cpp', label: 'C++', benchmarked: true },
+    
+    // Unbenchmarked languages
+    { value: 'csharp', label: 'C#', benchmarked: false },
+    { value: 'javascript', label: 'JavaScript', benchmarked: false },
+    { value: 'typescript', label: 'TypeScript', benchmarked: false },
+    { value: 'go', label: 'Go', benchmarked: false },
+    { value: 'rust', label: 'Rust', benchmarked: false }
   ]
+
+  const renderLanguageOptions = () => {
+    const benchmarkedLanguages = languages.filter(lang => lang.benchmarked)
+    const unbenchmarkedLanguages = languages.filter(lang => !lang.benchmarked)
+    
+    return (
+      <>
+        <optgroup label="Benchmarked Languages">
+          {benchmarkedLanguages.map(lang => (
+            <option 
+              key={lang.value} 
+              value={lang.value}
+            >
+              {lang.label}
+            </option>
+          ))}
+        </optgroup>
+        <optgroup label="Unbenchmarked Languages">
+          {unbenchmarkedLanguages.map(lang => (
+            <option 
+              key={lang.value} 
+              value={lang.value}
+              className="unbenchmarked-option"
+            >
+              {lang.label}
+            </option>
+          ))}
+        </optgroup>
+      </>
+    )
+  }
 
   return (
     <div className="container">
