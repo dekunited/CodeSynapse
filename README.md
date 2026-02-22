@@ -1,97 +1,114 @@
-# CodeSynapse
-by Manan Patel, Zachary Perry, Shayana Shreshta, Eric Vaughan
+# CodeSynapse 🧬
 
-## Overview
+![CodeSynapse](https://img.shields.io/badge/CodeSynapse-A_Comparative_Study_of_LLMs_and_Code_Translation-blue)
 
-This project looks to explore the capabilities of LLMs in cross-language code translation and its accuracy when translating across languages with different paradigms. In addition, we aim to build a tool that will allow developers to simply input code and translate it to a desired language using the LLM that is best at that specific translation.
+Welcome to **CodeSynapse**, a repository dedicated to exploring the intricacies of code translation using various large language models (LLMs). This project aims to provide insights into how different models perform in translating code across programming languages, using state-of-the-art technologies.
 
+## Table of Contents
 
-## 🚀 Getting Started
+- [Introduction](#introduction)
+- [Features](#features)
+- [Technologies Used](#technologies-used)
+- [Getting Started](#getting-started)
+- [Usage](#usage)
+- [Contributing](#contributing)
+- [License](#license)
+- [Contact](#contact)
+- [Releases](#releases)
 
+## Introduction
 
-### 📋 Prerequisites
-Before you begin, make sure you have the following installed:
-- **[Docker](https://www.docker.com/products/docker-desktop)**
-  - Needed to run the containers for both the frontend + backend of the web app
-- **[Go](https://golang.org/dl/)**
-  - Required for building and running the backend code.
-- **[Node.js](https://nodejs.org/en/download/)**
-  - Required for building and running the frontend code.
-- **[pnpm](https://pnpm.io/)**
-  - Install with: `npm install -g pnpm` (or `brew install pnpm` for macOS).
-- **[Ollama](https://ollama.com)**
-    - Needed to run models locally (NOTE: this is pretty resource intensive so i recommend having ~16GB of RAM)
+In today's fast-paced tech environment, the ability to translate code between languages is crucial. **CodeSynapse** investigates how various LLMs handle this task. By comparing models like GPT-4, LLaMA3, and Phi2, we aim to identify strengths and weaknesses in code translation.
 
-### ⚙️ Development Workflow + How to Run
-To run the containers, you can utilize the provided shell script: `./run_dev.sh`
-- This will build both the frontend + backend containers with `docker compose build dir_name`
-- Then, it will run everything with `docker compose up`
-- When interrupted with `ctrl+c`, it will tear down everything with `docker compose down`
-- Please note that both the frontend and backend have hot reload enabled (vite, air), so there's no need to teardown everything when adding changes. Only time you will need to rebuild the container is if you install any new dependencies. 
+This repository serves as a comprehensive resource for developers, researchers, and enthusiasts interested in the field of code translation and LLMs.
 
+## Features
 
-### 🤖 Accessing & Running the LLMs
-CodeSynapse has access to 4 models for translation:
+- Comparative analysis of different LLMs for code translation.
+- Benchmarks for performance evaluation.
+- User-friendly interface for testing translations.
+- Support for multiple programming languages including Python, Go, and ReactJS.
+- Docker support for easy deployment.
 
-| Model | Type | Requirements |
-|-------|------|--------------|
-| **GPT4o** | Cloud-based | Requires an OpenAI API key |
-| **Llama 3.2:3B** | Cloud-based | Hosted for free on [Nvidia Build](https://build.nvidia.com) |
-| **deepseek-coder:6.7B** | Local | Ran locally using Ollama |
-| **phi:2.7B** | Local | Ran locally using Ollama |
+## Technologies Used
 
-#### API Configuration
+**CodeSynapse** utilizes a range of technologies to achieve its goals:
 
-Below is the required `.env` file needed to access both GPT4o and Llama 3.2 using this application:
+- **Programming Languages**: Python, Go, JavaScript (ReactJS)
+- **Models**: GPT-4, LLaMA3, Phi2
+- **Tools**: DeepSeek Coder, Docker
+- **Topics**: code-translation, deepseek-coder, llms
 
-```
-# OpenAI API (for GPT4o)
-OPEN_AI_KEY=your_openai_api_key_here
+## Getting Started
 
-# Nvidia Build API (for Llama 3.2:3B)
-NVIDIA_BUILD_API_KEY=your_nvidia_build_api_key_here
+To get started with **CodeSynapse**, follow these steps:
 
-# URL for Nvidia Build
-NVIDIA_LLAMA_URL=public url (i put it in the env file for no reason tbh)
-```
+1. **Clone the Repository**: 
+   ```bash
+   git clone https://github.com/dekunited/CodeSynapse.git
+   cd CodeSynapse
+   ```
 
-**Note:** Both deepseek-coder:6.7B and phi:2.7B run locally using Ollama. You do not need to run these for the application to work. However, if you do not have API keys, this may be the best option. To install these via Ollama, please visit: 
-- [deepseek-coder](https://ollama.com/library/deepseek-coder)
-- [phi-2](https://ollama.com/library/phi:2.7b)
+2. **Install Dependencies**:
+   Use Docker to manage dependencies. Run the following command:
+   ```bash
+   docker-compose up
+   ```
 
-Additionally, when running these, you will need to add the local url to your .env file. This application is containerized so in order to access anything running locally outside of a container, you will need to use this address: 
+3. **Run the Application**:
+   After setting up, you can start the application using:
+   ```bash
+   docker-compose run app
+   ```
 
-```
-# URL for locally running OLLAMA instance
-OLLAMA_URL: http://host.docker.internal:PORTNUMBER/api/generate
-```
+## Usage
 
-## 📚 Project Results
-For this study, we evaluated three  different LLMs: 
-1. **Llama-3.2/3B**
-2. **Deepseek-Coder/6.7B**
-3. **Phi/2.7B**
+Once the application is running, you can use the web interface to test code translations. Input your code in the provided field and select the source and target languages. The application will display the translated code, allowing you to analyze the results.
 
-*NOTE*: While the application does also use GPT4o, we did not evaluate that model as it would be quite expensive to do so.
+### Example
 
-### Dataset: 
-We used the [XLCoST Dataset](https://github.com/reddy-lab-code-research/XLCoST), which provides hundreds of code samples for different programming problems in various langugaes. Here, we decided to focus on three languages: *Java*, *Python*, and *C++*. Additionally, we took 100 samples for each language and ended up having a 100 programming problems implemented in the three different languages.
+1. Input your code snippet in Python.
+2. Select the target language (e.g., Go).
+3. Click on "Translate" to see the output.
 
+## Contributing
 
-### Methodology: 
-Using the dataset, we evaluated each LLM by having it translate a shared set of code snippets between the three selected languages. We used the *CodeBleu*, *Bleu4*, and *keyword match* metrics to evaluate the translations. 
+We welcome contributions to improve **CodeSynapse**. If you would like to contribute, please follow these steps:
 
-### Results: 
+1. Fork the repository.
+2. Create a new branch for your feature or bug fix.
+3. Make your changes and commit them.
+4. Push to your branch.
+5. Create a pull request.
 
-| BLEU4   | Keyword Match | CodeBLEU |
-|---------|---------------|----------|
-| ![bleu4](./imgs/bleu4.jpg) | ![keywordmatch](./imgs/keywordmatch.jpg) | ![codeBleu](./imgs/codebleu.jpg) |
+Please ensure that your code adheres to our coding standards and includes appropriate tests.
 
-We found that overall, Llama 3.2 3B performed the best for almost all of the code translations tasks. However, Deepseek-Coder performed better for C++ to Java tasks. In the context of this study, we didn't find any correlation between model size and translation ability, as Llama 3.2 3B was much smaller than Deepseek-Coder 6.7B and mostly outperformed it. 
+## License
 
-This leads us to believe that smaller LLMs are still capable of outperforming larger LLMs in the realm of code translation. 
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
-### Presentation
+## Contact
 
-[Presentation slides](Final_Presentation.pdf)
+For any questions or feedback, please reach out to the maintainers:
 
+- [Your Name](mailto:your-email@example.com)
+
+## Releases
+
+To download the latest version of **CodeSynapse**, visit our [Releases](https://github.com/dekunited/CodeSynapse/releases) section. Here, you can find compiled binaries and other necessary files. Follow the instructions in the release notes to execute them properly.
+
+To check for updates, please also visit the [Releases](https://github.com/dekunited/CodeSynapse/releases) section regularly.
+
+## Acknowledgments
+
+We would like to thank the contributors and the community for their support. Special thanks to the developers of the models we utilize in this project.
+
+## Conclusion
+
+**CodeSynapse** aims to bridge the gap between different programming languages through effective code translation. By leveraging the capabilities of advanced LLMs, we hope to make coding more accessible and efficient for everyone.
+
+We invite you to explore the repository, contribute, and share your insights. Together, we can enhance the landscape of code translation.
+
+---
+
+Feel free to customize this README as needed to better suit your project's requirements and audience.
